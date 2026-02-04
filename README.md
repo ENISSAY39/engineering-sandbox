@@ -1,6 +1,16 @@
 # Engineering Sandbox
 
+## What's up?
+
 This repository is about creating an environment for EPF students to try out GitHub features alongside engineering skills, planning and designing on one hand and collaborating and solving technical issues together on the other hand.
+
+## A word of warning
+
+```
+Most of the textual content below has been generated from transcripts of classes with 2025's 5A.
+
+It has then been reviewed to match pedagogical expectations.
+```
 
 ## Skills
 
