@@ -30,5 +30,5 @@ while(True):
     if choice_user == "Y":
         total_expenses = sum(list_expenses_Food) + sum(list_expenses_Divertissement) + sum(list_expenses_Taxes)
         print(f"Your Dashboard (You are {compte} expenses): \n","Food expenses: ", sum(list_expenses_Food), "\n","Divertissment expenses :",sum(list_expenses_Divertissement), "\n", "Taxes expenses :", sum(list_expenses_Taxes))
-        print("Here is the expenses proportional :", sum(list_expenses_Food)/total_expenses, "%,", sum(list_expenses_Divertissement)/total_expenses, "%,", sum(list_expenses_Taxes)/total_expenses, "%.")
+        print("Here is the expenses proportional :", sum(list_expenses_Food)/total_expenses, "%","of food,", sum(list_expenses_Divertissement)/total_expenses, "%","of divertissment,", sum(list_expenses_Taxes)/total_expenses, "%","of taxes.")
         break
