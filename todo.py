@@ -1,3 +1,7 @@
+from datetime import datetime
+
+today = datetime.today()
+
 tasks = [
     {
         "title": "Buy groceries",
@@ -37,6 +41,22 @@ tasks = [
 ]
 
 running = True
+
+for task in tasks:
+    deadline_date = datetime.strptime(task["deadline"], "%Y-%m-%d")
+    jours_restants = (deadline_date - today).days
+
+    if jours_restants >= 0:
+        print(
+            f"🔔 Rappel : '{task['title']}' → "
+            f"{jours_restants} jour(s) restant(s) avant la deadline"
+        )
+    else:
+        print(
+            f"⚠️  Deadline dépassée pour '{task['title']}' "
+            f"({abs(jours_restants)} jour(s) de retard)"
+        )
+
 while running:
     print("What do you want to do?\n")
     choix = input("Add / Show / Modify / Quit")
