@@ -16,17 +16,31 @@ def main():
         page = context.pages[0] 
 
         page.goto("https://moodle.epf.fr/")
-        page.locator("text=Connexion").first.wait_for(state="visible", timeout=15000)        
+        # Avoid hard failing on a fixed timeout: first login + 2FA can take longer.
+        # We will decide whether to login using a safe existence check below.
+        page.wait_for_load_state("domcontentloaded")
         
         if isElementExisting(page, "text=Connexion"):
-
             login(page) 
+
+            # api_moodle expects to run on the dashboard (/my/).
+            page.goto("https://moodle.epf.fr/my/")
+            page.wait_for_load_state("domcontentloaded")
+
             assignments = get_assignments_due_from_moodle_dashboard(page)
             create_deposit_folders(assignments)
-            
-            input()
+
+            # Removed blocking terminal input: login confirmation is now handled via GUI event.
+            # This prevents freezing when running from pywebview.
+            pass
         else:
             print("Vous êtes déja connectés !")
+            
+            page.goto("https://moodle.epf.fr/my/")
+            page.wait_for_load_state("domcontentloaded")
+
+            assignments = get_assignments_due_from_moodle_dashboard(page)
+            create_deposit_folders(assignments)
         # print_dom(page)
         context.close()
 
