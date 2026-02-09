@@ -1,5 +1,6 @@
 import socket
 import threading
+import traceback
 import time
 import webview
 from pathlib import Path
@@ -32,11 +33,46 @@ Expose Python functions to the HTML interface through pywebview.
 Methods defined here can be called from JavaScript using :
     window.pywebview.api.<method>()
 This is the bridge between the GUI and backend logic."""
-
+# Runs backend tasks in a background thread to avoid freezing the UI.
+# Stores progress logs so the frontend can poll and display them.
 class Api:
+    def __init__(self):
+        self._logs: list[str] = []
+        self._is_running: bool = False
+
     def ping(self):
         #simple connectivity test between the GUI (JS) and Python backend.
         return "python connecté 👍"
+    
+    def start_sync(self) -> dict:
+        # Starts the Moodle sync in a separate thread (non-blocking for the GUI).
+        if self._is_running:
+            return {"ok": False, "error": "Sync already running"}
+        
+        self._logs.clear()
+        self._is_running = True
+        self._logs.append("Starting sync…")
+
+        t = threading.Thread(target=self._sync_worker, daemon=True)
+        t.start()
+        return {"ok": True}
+    
+    def get_status(self) -> dict:
+        # Returns current state + accumulated logs for the frontend (polling).
+        return {"running": self._is_running, "logs": self._logs}
+    
+    def _sync_worker(self) -> None:
+        # Background worker that runs the existing backend workflow.
+        try:
+            self._logs.append("Running backend workflow…")
+            import main
+            main.main()
+            self._logs.append("Sync completed ✅")
+        except Exception:
+            self._logs.append("Sync failed ❌")
+            self._logs.append(traceback.format_exc())
+        finally:
+            self._is_running = False
     
 
 def main():

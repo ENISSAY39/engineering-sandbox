@@ -7,14 +7,42 @@
 
     <body>  
         <h1>Never be late</h1>
+
         <!-- Button used to test communication between the HTML interface and the Python backend -->
         <button onclick="testAPI()">Tester Python</button>
+
+        <!-- GUI addition: triggers Moodle synchronization (runs in Python background thread) -->
+        <button onclick="startSync()">Sync Moodle</button>
+
+        <!-- GUI addition: displays backend logs (polled from Python) -->
+        <pre id="logs" style="margin-top:12px; padding:10px; background:#f4f4f4; height:160px; overflow:auto;"></pre>
+
 
         <script>
             // GUI addition: calls a Python method via pywebview API
             async function testAPI(params) {
                 const result = await window.pywebview.api.ping();
                 alert(result);
+            }
+
+            // GUI addition: starts the backend sync and polls logs until completion
+            async function startSync() {
+                const res = await window.pywebview.api.start_sync();
+                if (!res.ok) {
+                    alert(res.error);
+                    return;
+                }
+
+                const logsEl = document.getElementById("logs");
+
+                const timer = setInterval(async () => {
+                    const status = await window.pywebview.api.get_status();
+                    logsEl.textContent = (status.logs || []).join("\n");
+
+                    if (!status.running) {
+                        clearInterval(timer);
+                    }
+                }, 500);
             }
         </script>
     </body>

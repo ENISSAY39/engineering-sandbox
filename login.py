@@ -52,7 +52,14 @@ def login(page: Page) -> None:
                 break
             else:
                 import subprocess
-                subprocess.run(["python", "set_credentials.py"])
+                from pathlib import Path
+                import sys
+                # === GUI COMPATIBILITY FIX ===
+                # Ensures the credentials script is called using an absolute path,
+                # avoiding issues when the working directory differs (e.g., GUI launch).
+                credentials_script = Path(__file__).resolve().parent / "set_credentials.py"
+                subprocess.run([sys.executable, str(credentials_script)])
+                # === END FIX ===
 
         page.locator("#i0116").fill(email)
         
