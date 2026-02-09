@@ -79,7 +79,11 @@ def login(page: Page) -> None:
         else:
             raise RuntimeError("The next button is not present on the page.")
 
-        input()
+        """# === GUI COMPATIBILITY ADDITION ===
+        # Waiting for user validation handled by the GUI instead of terminal input.
+        # This avoids blocking the application when running with pywebview."""
+        from time import sleep
+        sleep(10)  # Temporary placeholder: will be replaced by GUI confirmation signal
 
         """
         The F2A verification can't be made automatically (Guess it's good news :)

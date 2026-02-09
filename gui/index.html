@@ -17,6 +17,9 @@
         <!-- GUI addition: displays backend logs (polled from Python) -->
         <pre id="logs" style="margin-top:12px; padding:10px; background:#f4f4f4; height:160px; overflow:auto;"></pre>
 
+        <!-- GUI addition: manual confirmation after Moodle 2FA -->
+        <button onclick="confirmLogin()">Continue after login</button>
+
 
         <script>
             // GUI addition: calls a Python method via pywebview API
@@ -44,6 +47,12 @@
                     }
                 }, 500);
             }
+
+            // GUI addition: placeholder confirmation for login completion
+            async function confirmLogin() {
+                alert("Login confirmed (placeholder)");
+            }
+
         </script>
     </body>
 
