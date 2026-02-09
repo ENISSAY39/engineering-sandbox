@@ -17,6 +17,19 @@
         <!-- GUI addition: displays backend logs (polled from Python) -->
         <pre id="logs" style="margin-top:12px; padding:10px; background:#f4f4f4; height:160px; overflow:auto;"></pre>
 
+        <!-- GUI addition: assignments table -->
+        <table id="tbl" border="1" style="width:100%; margin-top:12px; border-collapse:collapse;">
+            <thead>
+                <tr>
+                <th>Course</th>
+                <th>Title</th>
+                <th>Due date</th>
+                <th>Link</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+
         <!-- GUI addition: manual confirmation after Moodle 2FA -->
         <button onclick="confirmLogin()">Continue after login</button>
 
@@ -41,6 +54,23 @@
                 const timer = setInterval(async () => {
                     const status = await window.pywebview.api.get_status();
                     logsEl.textContent = (status.logs || []).join("\n");
+
+                    // Render assignments returned by backend into the HTML table.
+                    const tbody = document.getElementById("tbody");
+                    if (tbody) {
+                        tbody.innerHTML = "";
+
+                        (status.assignments || []).forEach(a => {
+                            const tr = document.createElement("tr");
+                             tr.innerHTML = `
+                                <td>${a.course || ""}</td>
+                                <td>${a.title || ""}</td>
+                                <td>${a.due_date_label || ""}</td>
+                                <td><a href="${a.url}" target="_blank">open</a></td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
 
                     if (!status.running) {
                         clearInterval(timer);

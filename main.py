@@ -29,18 +29,22 @@ def main():
 
             assignments = get_assignments_due_from_moodle_dashboard(page)
             create_deposit_folders(assignments)
+            # Return extracted assignments so the GUI can display them.
+            return assignments
 
             # Removed blocking terminal input: login confirmation is now handled via GUI event.
             # This prevents freezing when running from pywebview.
             pass
         else:
             print("Vous êtes déja connectés !")
-            
+
             page.goto("https://moodle.epf.fr/my/")
             page.wait_for_load_state("domcontentloaded")
 
             assignments = get_assignments_due_from_moodle_dashboard(page)
             create_deposit_folders(assignments)
+            # Return extracted assignments so the GUI can display them.
+            return assignments
         # print_dom(page)
         context.close()
 

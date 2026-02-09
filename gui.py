@@ -40,6 +40,8 @@ class Api:
         self._logs: list[str] = []
         self._is_running: bool = False
         self.login_event = threading.Event()
+        self._assignments: list[dict] = []
+
 
     def ping(self):
         #simple connectivity test between the GUI (JS) and Python backend.
@@ -60,15 +62,16 @@ class Api:
     
     def get_status(self) -> dict:
         # Returns current state + accumulated logs for the frontend (polling).
-        return {"running": self._is_running, "logs": self._logs}
+        return {"running": self._is_running, "logs": self._logs, "assignments": self._assignments}
     
     def _sync_worker(self) -> None:
         # Background worker that runs the existing backend workflow.
         try:
             self._logs.append("Running backend workflow…")
             import main
-            main.main()
-            self._logs.append("Sync completed ✅")
+            # # Store returned assignments so the frontend can render them.
+            self._assignments = main.main() or []
+            self._logs.append(f"Sync completed ✅ ({len(self._assignments)} assignments)")
         except Exception:
             self._logs.append("Sync failed ❌")
             self._logs.append(traceback.format_exc())
