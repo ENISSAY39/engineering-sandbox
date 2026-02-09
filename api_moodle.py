@@ -92,3 +92,23 @@ def get_assignments_due_from_moodle_dashboard(page: Page) -> list[dict]:
         json.dump(items, f)
     
     return items
+
+
+
+    def get_schedule_for_assignement(assignement: dict) -> dict:
+        """
+        Get the schedule for an assignement.
+        :param assignement: The assignement to get the schedule for.
+        :return: The schedule for the assignement in type dictionnary.
+        """
+
+        time_stamp = assignement.get("due_timestamp")
+        if time_stamp is None:
+            return None
+        
+        dt = datetime.fromtimestamp(assignement["due_timestamp"])
+        #Because we already have correct timestamp set in get_assignments_due_from_moodle_dashboard
+        return {
+            "jour_du_rendu": dt.strftime("%Y-%m-%d"),
+            "heure_max_depot": dt.strftime("%H:%M")
+        }

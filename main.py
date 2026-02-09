@@ -23,6 +23,7 @@ def main():
             login(page) 
             assignments = get_assignments_due_from_moodle_dashboard(page)
             create_deposit_folders(assignments)
+            
             input()
         else:
             print("Vous êtes déja connectés !")
