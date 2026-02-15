@@ -1,5 +1,5 @@
-# Voici le code à réaliser pour le projet de suivi des dépenses personnelles en Python. Ce code permet de suivre les dépenses, de les catégoriser.
-# Projet de suivi des dépenses personnelles avec dictionnaire
+# Here is the code to create for the personal expenses tracking project in Python. This code allows you to track expenses and categorize them.
+# Personal expenses tracking project with dictionary
 
 expenses = {
     "F": [],  # Food
